@@ -109,7 +109,7 @@ def print_board(board):
             new_string = f'[{str(list[i])}]'
             formatted_board = formatted_board.replace(string, new_string)
 
-    print(formatted_board)
+    print(f'\n{formatted_board}\n')
 
 
 
