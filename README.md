@@ -7,9 +7,9 @@ How to play:
 
 1) Make sure you have Python installed.
 2) Navigate to the directory containing the naughts_and_crosses.py file.
-   (Use the command 'cd' to change directory e.g. \n
+   (Use the command 'cd' to change directory e.g. 
    $ cd /Users/dawiddawidowski/documents/Capstone-Project
-3) Run the game by typing:
+4) Run the game by typing:
    $ python3 naughts_and_crosses
 
 Enjoy!
