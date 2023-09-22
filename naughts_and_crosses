@@ -1,0 +1,180 @@
+# TO-DO
+# Clean up code
+# Refactor
+
+import numpy as np
+
+print('Welcome to Naughts and Crosses!\n')
+print("Here's how the board looks:\n")
+print(
+      "[1] [2] [3]",
+      "\n[4] [5] [6]",
+      "\n[7] [8] [9]\n"
+      )
+
+# Functions
+def ask_user_choice(board, player1_marker, player1 = "Player 1"):
+    """
+    Ask user to enter a number between 1 and 9.
+    If input in correct range, returns input as an integer 'choice'.
+    If empty input, invalid type/value, or input outside range [1-9], returns None.
+    If input is 'Exit', returns exit.
+
+    INPUTS
+    board (numpy.ndarray) = 3x3 array containing Naughts and Crosses board elements.
+    player_marker (str) = 'x' or 'o' depending on user choice.
+    player1 (str) = Name of Player 1.
+
+    OUTPUTS
+    choice (int) = Valid user inputin range [1-9] converted into an integer.
+    None (NoneType) = Returned for empty input, invalid input type or input outside range [1-9]. 
+    'Exit' (str) = Returned when user types 'Exit' to exit game.
+
+    """
+    try:
+        raw_input = input(f'{player1}, where do you want to put {player1_marker}? Enter [1-9]. To exit, type "Exit": ')
+        if not raw_input:
+            return None
+        elif raw_input.capitalize() == 'Exit':
+            return 'Exit'
+    
+        choice = int(raw_input)
+        if choice in range(1,10):
+            return choice
+        else:
+            return None   
+    except:
+            return None
+
+def check_win(board):
+    """
+    Checks whether one of the 8 possible winning conditions is true.
+
+    INPUTS
+    board (numpy.ndarray) = 3x3 array containing Naughts and Crosses board elements.
+
+    OUTPUTS
+    True (bool) = Returned if winning condition met.
+    None (NoneType) = Returned if no winning condition is met.
+
+    """
+    if board[0,0] == board[0,1] == board[0,2] != '_':
+        return True
+    elif board[1,0] == board[1,1] == board[1,2] != '_':
+        return True
+    elif board[2,0] == board[2,1] == board[2,2] != '_':
+        return True
+    elif board[0,0] == board[1,0] == board[2,0] != '_':
+        return True
+    elif board[0,1] == board[1,1] == board[2,1] != '_':
+        return True
+    elif board[0,2] == board[1,2] == board[2,2] != '_':
+        return True
+    elif board[0,0] == board[1,1] == board[2,2] != '_':
+        return True
+    elif board[0,2] == board[1,1] == board[2,0] != '_':
+        return True
+    else:
+        return None
+    
+def swap_turn(turn, player1, player2):
+    """
+    Swaps 'turn' between values of player1 and player2.
+
+    INPUTS
+    turn (str) = Equal to value of player1 or player2.
+
+    OUTPUTS
+    player2 (str) = Returned if turn == player1
+    player1 (str) = Returned if turn == player2.
+
+    """   
+    if turn == player1:
+        return player2
+    else:
+        return player1
+
+
+
+# Set-up game
+board_list = ['_','_','_','_','_','_','_','_','_']
+board = np.array(board_list).reshape(3,3)
+board_elements = {
+    1 : (0,0),
+    2 : (0,1),
+    3 : (0,2),
+    4 : (1,0),
+    5 : (1,1),
+    6 : (1,2),
+    7 : (2,0),
+    8 : (2,1),
+    9 : (2,2)
+}
+
+player1 = input("Player 1, enter your name: ").title()
+player2 = input("Player 2, enter your name: ").title()
+player1_marker = ''
+
+while player1_marker != 'x' and player1_marker != 'o':
+    
+    player1_marker = input(f'\n{player1}, choose x or o: ')
+    if player1_marker == 'x':
+        player2_marker = 'o'
+    elif player1_marker == 'o':
+        player2_marker = 'x'
+    else:
+        print("\nError. Please type 'x' or 'o': ")
+
+print(f'\n{board}\n')
+
+# Gameplay block
+is_end = False
+count = 0
+turn = player1
+
+while not is_end: 
+
+    # Ask user input based on who's turn it is. Should I refactor?
+    if turn == player1:
+        user_choice = ask_user_choice(board, player1_marker, player1)
+        marker = player1_marker
+    else:
+        user_choice = ask_user_choice(board, player2_marker, player2)
+        marker = player2_marker
+
+    # Evaluate user input.
+    if not user_choice:
+        print('\nInvalid input. Please enter a number between 1 and 9.\n')
+    elif user_choice == 'Exit':
+        print('\nExiting game.\n')
+        break
+    else:
+        # User input is valid.
+        position = board_elements[user_choice]
+        if board[position] == '_':
+            board[position] = marker
+            print(f'\n{board}\n')
+
+            # Winning conditions begin in turn 5 (3 Player1 choices) CAN REFACTOR
+            if count >= 4:
+                is_end = check_win(board)
+            if is_end == True:
+                print('\nGAME OVER!')
+                print(f'{turn.upper()} WON!\n')
+                break
+            
+            # Iterate count and turn.
+            count += 1 
+            turn = swap_turn(turn, player1, player2)
+
+        else:
+            print('\nThat space is already taken!\n')
+
+    if count == 9:
+        print("\nGAME OVER!")
+        print("IT'S A DRAW!\n")
+        is_end = True
+
+
+
+
